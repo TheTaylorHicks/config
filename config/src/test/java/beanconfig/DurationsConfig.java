@@ -1,6 +1,6 @@
 package beanconfig;
 
-import java.time.Duration;
+import org.threeten.bp.Duration;
 
 public class DurationsConfig {
     Duration second;

@@ -23,7 +23,9 @@ final class DefaultTransformer {
             switch (requested) {
             case NUMBER:
                 try {
-                    Long v = Long.parseLong(s);
+                    // Remove the leading '+' sign as they are only supported in Java 7 and later.
+                    // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html#parseLong%28java.lang.String%29
+                    Long v = Long.parseLong(s.replace("+", ""));
                     return new ConfigLong(value.origin(), v, s);
                 } catch (NumberFormatException e) {
                     // try Double
@@ -93,7 +95,9 @@ final class DefaultTransformer {
             for (String key : o.keySet()) {
                 int i;
                 try {
-                    i = Integer.parseInt(key, 10);
+                    // Remove the leading '+' sign as they are only supported in Java 7 and later.
+                    // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html#parseInt%28java.lang.String%29
+                    i = Integer.parseInt(key.replace("+", ""), 10);
                     if (i < 0)
                         continue;
                     values.put(i, o.get(key));
@@ -110,7 +114,7 @@ final class DefaultTransformer {
                             @Override
                             public int compare(Map.Entry<Integer, AbstractConfigValue> a,
                                     Map.Entry<Integer, AbstractConfigValue> b) {
-                                return Integer.compare(a.getKey(), b.getKey());
+                                return a.getKey().compareTo(b.getKey());
                             }
                         });
                 // drop the indices (we allow gaps in the indices, for better or

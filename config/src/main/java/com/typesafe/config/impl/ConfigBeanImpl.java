@@ -4,6 +4,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.Duration;
+import org.threeten.bp.Duration;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
@@ -277,7 +278,16 @@ public class ConfigBeanImpl {
 
     private static boolean isOptionalProperty(Class beanClass, PropertyDescriptor beanProp) {
         Field field = getField(beanClass, beanProp.getName());
-        return field != null && (field.getAnnotationsByType(Optional.class).length > 0);
+
+        if (field != null) {
+            for (Annotation annotation : field.getAnnotations()) {
+                if (annotation.annotationType().equals(Optional.class)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private static Field getField(Class beanClass, String fieldName) {

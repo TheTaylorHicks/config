@@ -2,6 +2,7 @@ package com.typesafe.config.impl
 
 import java.net.ServerSocket
 import java.net.InetSocketAddress
+
 import scala.annotation.tailrec
 import scala.util.control.NonFatal
 import java.net.Socket
@@ -14,7 +15,7 @@ import java.util.Locale
 import java.util.TimeZone
 import java.io.PrintWriter
 import java.io.OutputStreamWriter
-import java.nio.charset.StandardCharsets
+import java.nio.charset.Charset
 import java.util.Date
 
 // terrible http server that's good enough for our test suite
@@ -117,7 +118,7 @@ final class ToyHttp(handler: ToyHttp.Request => ToyHttp.Response) {
     private def sendResponse(out: OutputStream, response: Response): Unit = {
         //val stuff = new java.io.ByteArrayOutputStream
         //val writer = new PrintWriter(new OutputStreamWriter(stuff, StandardCharsets.UTF_8))
-        val writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))
+        val writer = new PrintWriter(new OutputStreamWriter(out, Charset.forName("UTF-8")))
         val dateFormat = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss 'GMT'", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 

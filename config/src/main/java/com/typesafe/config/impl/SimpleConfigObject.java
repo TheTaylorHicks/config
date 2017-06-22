@@ -449,7 +449,10 @@ final class SimpleConfigObject extends AbstractConfigObject implements Serializa
             boolean aDigits = isAllDigits(a);
             boolean bDigits = isAllDigits(b);
             if (aDigits && bDigits) {
-                return Integer.compare(Integer.parseInt(a), Integer.parseInt(b));
+                // Remove the leading '+' sign as they are only supported in Java 7 and later.
+                // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html#parseInt%28java.lang.String%29
+                return Integer.valueOf(Integer.parseInt(a.replace("+", "")))
+                    .compareTo(Integer.valueOf(Integer.parseInt(b.replace("+", ""))));
             } else if (aDigits) {
                 return -1;
             } else if (bDigits) {

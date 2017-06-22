@@ -13,7 +13,7 @@ import scala.collection.mutable
 import equiv03.SomethingInEquiv03
 import java.io.StringReader
 import java.net.URL
-import java.time.Duration
+import org.threeten.bp.Duration
 
 class PublicApiTest extends TestUtils {
 

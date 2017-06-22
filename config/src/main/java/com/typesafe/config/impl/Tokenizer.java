@@ -368,7 +368,9 @@ final class Tokenizer {
                     return Tokens.newDouble(lineOrigin, Double.parseDouble(s), s);
                 } else {
                     // this should throw if the integer is too large for Long
-                    return Tokens.newLong(lineOrigin, Long.parseLong(s), s);
+                    // Remove the leading '+' sign as they are only supported  in Java 7 and later.
+                    // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html#parseLong%28java.lang.String%29
+                    return Tokens.newLong(lineOrigin, Long.parseLong(s.replace("+", "")), s);
                 }
             } catch (NumberFormatException e) {
                 // not a number after all, see if it's an unquoted string.
@@ -430,7 +432,9 @@ final class Tokenizer {
                 String digits = new String(a);
                 sbOrig.append(a);
                 try {
-                    sb.appendCodePoint(Integer.parseInt(digits, 16));
+                    // Remove the leading '+' sign as they are only supported in Java 7 and later.
+                    // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html#parseInt%28java.lang.String%29
+                    sb.appendCodePoint(Integer.parseInt(digits.replace("+", ""), 16));
                 } catch (NumberFormatException e) {
                     throw problem(digits, String.format(
                             "Malformed hex digits after \\u escape in string: '%s'", digits), e);

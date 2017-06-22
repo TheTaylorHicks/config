@@ -1,7 +1,6 @@
 package com.typesafe.config.impl
 
 import java.io.{ BufferedReader, FileReader }
-import java.nio.file.{ Paths, Files }
 
 import com.typesafe.config._
 import com.typesafe.config.parser._
@@ -305,7 +304,7 @@ class ConfigDocumentTest extends TestUtils {
         assertEquals(fileText, defaultLineEndingsToUnix(configDocument.render()))
     }
 
-    private def defaultLineEndingsToUnix(s: String): String = s.replaceAll(System.lineSeparator(), "\n")
+    private def defaultLineEndingsToUnix(s: String): String = s.replaceAll(System.getProperty("line.separator"), "\n")
 
     @Test
     def configDocumentReaderParse {

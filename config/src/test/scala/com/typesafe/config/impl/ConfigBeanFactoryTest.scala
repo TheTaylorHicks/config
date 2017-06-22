@@ -7,7 +7,7 @@ import beanconfig.EnumsConfig.{ Solution, Problem }
 import com.typesafe.config._
 
 import java.io.{ InputStream, InputStreamReader }
-import java.time.Duration;
+import org.threeten.bp.Duration;
 
 import beanconfig._
 import org.junit.Assert._

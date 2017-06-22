@@ -7,7 +7,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.Duration;
+import org.threeten.bp.Duration;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -646,7 +646,9 @@ final class SimpleConfig implements Config, MergeableValue, Serializable {
             // possible precision loss;
             // otherwise as a double.
             if (numberString.matches("[+-]?[0-9]+")) {
-                return units.toNanos(Long.parseLong(numberString));
+                // Remove the leading '+' sign as they are only supported in Java 7 and later.
+                // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Long.html#parseLong%28java.lang.String%29
+                return units.toNanos(Long.parseLong(numberString.replace("+", "")));
             } else {
                 long nanosInUnit = units.toNanos(1);
                 return (long) (Double.parseDouble(numberString) * nanosInUnit);
@@ -654,7 +656,7 @@ final class SimpleConfig implements Config, MergeableValue, Serializable {
         } catch (NumberFormatException e) {
             throw new ConfigException.BadValue(originForException,
                     pathForException, "Could not parse duration number '"
-                            + numberString + "'");
+                            + numberString + "' | " + Long.MAX_VALUE, e);
         }
     }
 

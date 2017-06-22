@@ -7,6 +7,7 @@ import org.junit.Assert._
 import com.typesafe.config.ConfigOrigin
 import java.io.Reader
 import java.io.StringReader
+
 import com.typesafe.config.ConfigParseOptions
 import com.typesafe.config.ConfigSyntax
 import com.typesafe.config.ConfigFactory
@@ -18,12 +19,15 @@ import java.io.ObjectInputStream
 import java.io.NotSerializableException
 import java.io.OutputStream
 import java.io.InputStream
+
 import scala.annotation.tailrec
 import java.net.URL
-import java.util.Locale
+import java.util.{Locale, Random}
 import java.util.concurrent.Executors
 import java.util.concurrent.Callable
+
 import com.typesafe.config._
+
 import scala.reflect.ClassTag
 import scala.reflect.classTag
 import scala.collection.JavaConverters._
@@ -140,7 +144,9 @@ abstract trait TestUtils {
             if (sub.charAt(0) == '_') {
                 a(j) = charWrapper(sub.charAt(1)).byteValue
             } else {
-                a(j) = Integer.parseInt(sub, 16).byteValue
+                // Remove the leading '+' sign as they are only supported in Java 7 and later.
+                // @see: http://docs.oracle.com/javase/6/docs/api/java/lang/Integer.html#parseInt%28java.lang.String%29
+                a(j) = Integer.parseInt(sub.replace("+", ""), 16).byteValue
             }
             j += 1
         }
@@ -876,7 +882,7 @@ abstract trait TestUtils {
         val target = new File("target")
         if (!target.isDirectory)
             throw new RuntimeException(s"Expecting $target to exist")
-        val suffix = java.lang.Integer.toHexString(java.util.concurrent.ThreadLocalRandom.current.nextInt)
+        val suffix = java.lang.Integer.toHexString(new java.util.Random().nextInt)
         val scratch = new File(target, s"$testcase-$suffix")
         scratch.mkdirs()
         try {
